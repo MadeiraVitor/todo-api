@@ -1,0 +1,11 @@
+services:
+  todo-postgres:
+    image: postgres:latest
+    container_name: todo-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: todo-db
+    ports:
+      - "5432:5432"

@@ -1,7 +1,14 @@
 import express from 'express';
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
 
 const port = 3000;
 const app = express();
+
+const connectionString = `${process.env.DATABASE_URL}`;
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 app.post('/todo', (req, res) => {
    res.send('cadastrar um novo Todo');
