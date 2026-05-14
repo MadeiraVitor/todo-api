@@ -37,9 +37,13 @@ app.post("/todo", async (req, res) => {
   res.status(201).send("Todo criado com sucesso");
 });
 
-app.get("/todo", async (req, res) => {
-  const todos = await prisma.todo.findMany();
-  res.json(todos);
+app.get("/todo", async (_, res) => {
+  try {
+    const todos = await prisma.todo.findMany();
+    res.json(todos);
+  } catch (error) {
+    return res.status(500).send({ message: "Erro ao buscar os Todos" });
+  }
 });
 
 app.delete("/todo/:id", async (req, res) => {
