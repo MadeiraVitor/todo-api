@@ -16,6 +16,15 @@ app.post("/todo", async (req, res) => {
   const { title, done } = req.body;
 
   try {
+
+    const existingTodo = await prisma.todo.findFirst({
+      where: { title: { equals: title, mode: "insensitive" } },
+    });
+
+    if (existingTodo) {
+      return res.status(409).send({ message: "Essa Todo já existe" });
+    }
+
     await prisma.todo.create({
       data: {
         title,
