@@ -38,8 +38,9 @@ app.post("/todo", async (req, res) => {
   res.status(201).send("Todo criado com sucesso");
 });
 
-app.get("/todo", (req, res) => {
-  res.send("buscar todos os Todos cadastrados");
+app.get("/todo", async (req, res) => {
+  const todos = await prisma.todo.findMany();
+  res.json(todos);
 });
 
 app.delete("/todo/:id", (req, res) => {
