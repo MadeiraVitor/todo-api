@@ -16,7 +16,6 @@ app.post("/todo", async (req, res) => {
   const { title, done } = req.body;
 
   try {
-
     const existingTodo = await prisma.todo.findFirst({
       where: { title: { equals: title, mode: "insensitive" } },
     });
@@ -43,8 +42,24 @@ app.get("/todo", async (req, res) => {
   res.json(todos);
 });
 
-app.delete("/todo/:id", (req, res) => {
-  res.send("deletar um Todo específico");
+app.delete("/todo/:id", async (req, res) => {
+  const id = Number(req.params.id);
+
+  try {
+    const todo = await prisma.todo.findUnique({ where: { id } });
+
+    if (!todo) {
+      return res.status(404).send({ message: "Todo não encontrado" });
+    }
+
+    await prisma.todo.delete({
+      where: { id },
+    });
+  } catch (error) {
+    return res.status(500).send({ message: "Erro ao deletar o Todo" });
+  }
+
+  res.status(204).send("Todo deletado com sucesso");
 });
 
 app.listen(port, () => {
