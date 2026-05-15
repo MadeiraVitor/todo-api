@@ -1,0 +1,122 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Todo API",
+    "description": "API responsável por gerenciar as tarefas do usuário",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/todo": {
+      "post": {
+        "tags": ["Todo"],
+        "summary": "Cria uma nova tarefa",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tarefa criada com sucesso"
+          },
+          "409": {
+            "description": "Tarefa já existe"
+          },
+          "500": {
+            "description": "Erro ao criar a tarefa"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Todo"],
+        "summary": "Obter todas as tarefas",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de tarefas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao obter as tarefas"
+          }
+        }
+      }
+    },
+    "/todo/{id}": {
+      "delete": {
+        "tags": ["Todo"],
+        "summary": "Deleta uma tarefa pelo ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID da tarefa a ser deletada",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tarefa deletada com sucesso"
+          },
+          "404": {
+            "description": "Tarefa não encontrada"
+          },
+          "500": {
+            "description": "Erro ao deletar a tarefa"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Todo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificador único da tarefa"
+          },
+          "title": {
+            "type": "string",
+            "description": "Título da tarefa"
+          },
+          "done": {
+            "type": "boolean",
+            "description": "Indica se a tarefa foi concluída"
+          }
+        }
+      },
+      "TodoInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Título da tarefa"
+          },
+          "done": {
+            "type": "boolean",
+            "description": "Indica se a tarefa foi concluída"
+          }
+        },
+        "required": ["title", "done"]
+      }
+    }
+  }
+}
