@@ -3,6 +3,11 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 
+type Todo = {
+  title: string;
+  done: boolean;
+};
+
 const port = 3000;
 const app = express();
 
@@ -13,7 +18,7 @@ const prisma = new PrismaClient({ adapter });
 app.use(express.json());
 
 app.post("/todo", async (req, res) => {
-  const { title, done } = req.body;
+  const { title, done } = req.body as Todo;
 
   try {
     const existingTodo = await prisma.todo.findFirst({
