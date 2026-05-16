@@ -17,7 +17,6 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-
 app.use(cors());
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -34,17 +33,17 @@ app.post("/todo", async (req, res) => {
       return res.status(409).send({ message: "Essa Todo já existe" });
     }
 
-    await prisma.todo.create({
+    const createdTodo = await prisma.todo.create({
       data: {
         title,
         done,
       },
     });
+
+    res.status(201).json(createdTodo);
   } catch (error) {
     return res.status(500).send({ message: "Erro ao criar o Todo" });
   }
-
-  res.status(201).send("Todo criado com sucesso");
 });
 
 app.get("/todo", async (_, res) => {
